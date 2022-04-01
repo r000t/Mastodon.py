@@ -5,8 +5,8 @@ https://github.com/tootsuite/mastodon/blob/master/docs/Using-the-API/Streaming-A
 
 import json
 import six
-from external.mastodon import MastodonMalformedEventError, MastodonNetworkError, MastodonReadTimeout
-from external import mastodon
+from mastodon import MastodonMalformedEventError, MastodonNetworkError, MastodonReadTimeout
+import mastodon
 from requests.exceptions import ChunkedEncodingError
 
 Mastodon = mastodon.Mastodon
