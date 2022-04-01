@@ -48,10 +48,7 @@ try:
 except:
     IMPL_HAS_BLURHASH = False
 
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+from urllib.parse import urlparse, urlencode
 
 try:
     import magic
@@ -3335,7 +3332,7 @@ class Mastodon:
                 if to_next > 0:
                     # As a precaution, never sleep longer than 5 minutes
                     to_next = min(to_next, 5 * 60)
-                    asyncio.sleep(to_next)
+                    await asyncio.sleep(to_next)
             else:
                 time_waited = time.time() - self.ratelimit_lastcall
                 time_wait = float(self.ratelimit_reset - time.time()) / float(self.ratelimit_remaining)
@@ -3344,7 +3341,7 @@ class Mastodon:
             if remaining_wait > 0:
                 to_next = remaining_wait / self.ratelimit_pacefactor
                 to_next = min(to_next, 5 * 60)
-                asyncio.sleep(to_next)
+                await asyncio.sleep(to_next)
 
         # Generate request headers
         headers = copy.deepcopy(headers)
@@ -3436,7 +3433,7 @@ class Mastodon:
                         if to_next > 0:
                             # As a precaution, never sleep longer than 5 minutes
                             to_next = min(to_next, 5 * 60)
-                            asyncio.sleep(to_next)
+                            await asyncio.sleep(to_next)
                             request_complete = False
                             continue
 

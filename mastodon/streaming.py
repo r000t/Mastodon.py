@@ -5,9 +5,12 @@ https://github.com/tootsuite/mastodon/blob/master/docs/Using-the-API/Streaming-A
 
 import json
 import six
-from mastodon import Mastodon
-from mastodon.Mastodon import MastodonMalformedEventError, MastodonNetworkError, MastodonReadTimeout
-from requests.exceptions import ChunkedEncodingError, ReadTimeout
+from external.mastodon import MastodonMalformedEventError, MastodonNetworkError, MastodonReadTimeout
+from external import mastodon
+from requests.exceptions import ChunkedEncodingError
+
+Mastodon = mastodon.Mastodon
+
 
 class StreamListener(object):
     """Callbacks for the streaming API. Create a subclass, override the on_xxx
@@ -51,7 +54,7 @@ class StreamListener(object):
         that the connection is still open."""
         pass
     
-    def handle_stream(self, response):
+    async def handle_stream(self, response):
         """
         Handles a stream of events from the Mastodon server. When each event
         is received, the corresponding .on_[name]() method is called.
@@ -61,7 +64,7 @@ class StreamListener(object):
         event = {}
         line_buffer = bytearray()
         try:
-            for chunk in response.iter_content(chunk_size = 1):
+            async for chunk in response.aiter_bytes():
                 if chunk:
                     for chunk_part in chunk:
                         chunk_part = bytearray([chunk_part])
